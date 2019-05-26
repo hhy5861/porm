@@ -12,7 +12,7 @@ type (
 )
 
 func (d avatica) QuoteIdent(s string) string {
-	return quoteIdent(s, "`")
+	return quoteIdent(s, `"`)
 }
 
 func (d avatica) EncodeString(s string) string {

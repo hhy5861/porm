@@ -40,24 +40,20 @@ func (b *InsertStmt) Build(d Dialect, buf Buffer) error {
 
 	buf.WriteString("UPSERT INTO ")
 
-	if b.Namespace != nil {
-		buf.WriteString(`"`)
+	if b.Namespace != "" {
 		buf.WriteString(d.QuoteIdent(b.Namespace))
-		buf.WriteString(`"`)
 		buf.WriteString(`.`)
 	}
 
-	buf.WriteString(`"`)
 	buf.WriteString(d.QuoteIdent(b.Table))
-	buf.WriteString(`"`)
 
 	var placeholderBuf strings.Builder
 	placeholderBuf.WriteString("(")
 	buf.WriteString(" (")
 	for i, col := range b.Column {
 		if i > 0 {
-			buf.WriteString(",")
-			placeholderBuf.WriteString(",")
+			buf.WriteString(", ")
+			placeholderBuf.WriteString(", ")
 		}
 		buf.WriteString(d.QuoteIdent(col))
 		placeholderBuf.WriteString(placeholder)
@@ -147,7 +143,7 @@ func (tx *Tx) InsertBySql(query string, value ...interface{}) *InsertStmt {
 }
 
 // From specifies namespace to select from.
-// table can be Builder like SelectStmt, or string.
+// namespace can be Builder like SelectStmt, or string.
 func (b *InsertStmt) Schema(schema string) *InsertStmt {
 	b.Namespace = schema
 

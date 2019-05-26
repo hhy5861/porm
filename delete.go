@@ -14,6 +14,7 @@ type DeleteStmt struct {
 
 	raw
 
+	Namespace  string
 	Table      string
 	WhereCond  []Builder
 	LimitCount int64
@@ -31,6 +32,12 @@ func (b *DeleteStmt) Build(d Dialect, buf Buffer) error {
 	}
 
 	buf.WriteString("DELETE FROM ")
+
+	if b.Namespace != "" {
+		buf.WriteString(d.QuoteIdent(b.Namespace))
+		buf.WriteString(`.`)
+	}
+
 	buf.WriteString(d.QuoteIdent(b.Table))
 
 	if len(b.WhereCond) > 0 {
@@ -105,6 +112,14 @@ func (tx *Tx) DeleteBySql(query string, value ...interface{}) *DeleteStmt {
 	b.runner = tx
 	b.EventReceiver = tx.EventReceiver
 	b.Dialect = tx.Dialect
+
+	return b
+}
+
+// From specifies namespace to select from.
+// namespace can be Builder like SelectStmt, or string.
+func (b *DeleteStmt) Schema(schema string) *DeleteStmt {
+	b.Namespace = schema
 
 	return b
 }

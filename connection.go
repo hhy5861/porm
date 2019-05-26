@@ -101,6 +101,7 @@ func exec(ctx context.Context, runner runner, log EventReceiver, builder Builder
 
 	err := i.encodePlaceholder(builder, true)
 	query, value := i.String(), i.Value()
+
 	if err != nil {
 		return nil, log.EventErrKv("dbr.exec.interpolate", err, kvs{
 			"sql":  query,
@@ -130,6 +131,7 @@ func exec(ctx context.Context, runner runner, log EventReceiver, builder Builder
 			"sql": query,
 		})
 	}
+
 	return result, nil
 }
 
@@ -142,6 +144,7 @@ func queryRows(ctx context.Context, runner runner, log EventReceiver, builder Bu
 
 	err := i.encodePlaceholder(builder, true)
 	query, value := i.String(), i.Value()
+	fmt.Println("query", query)
 	if err != nil {
 		return query, nil, log.EventErrKv("dbr.select.interpolate", err, kvs{
 			"sql":  query,

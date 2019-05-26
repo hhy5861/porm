@@ -119,6 +119,7 @@ func (s *tagStore) findValueByName(value reflect.Value, name []string, ret []int
 			if tag == "" {
 				continue
 			}
+
 			fieldValue := value.Field(i)
 			for i, want := range name {
 				if want != tag {
@@ -132,6 +133,7 @@ func (s *tagStore) findValueByName(value reflect.Value, name []string, ret []int
 					}
 				}
 			}
+
 			s.findValueByName(fieldValue, name, ret, retPtr)
 		}
 	}

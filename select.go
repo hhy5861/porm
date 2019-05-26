@@ -67,23 +67,17 @@ func (b *SelectStmt) Build(d Dialect, buf Buffer) error {
 		if b.Namespace != nil {
 			switch namespace := b.Namespace.(type) {
 			case string:
-				buf.WriteString(`"`)
-				buf.WriteString(namespace)
-				buf.WriteString(`"`)
+				buf.WriteString(d.QuoteIdent(namespace))
 				buf.WriteString(speck)
 			default:
-				buf.WriteString(`"`)
 				buf.WriteString(placeholder)
-				buf.WriteString(`"`)
 				buf.WriteValue(namespace)
 			}
 		}
 
 		switch table := b.Table.(type) {
 		case string:
-			buf.WriteString(`"`)
-			buf.WriteString(table)
-			buf.WriteString(`"`)
+			buf.WriteString(d.QuoteIdent(table))
 		default:
 			buf.WriteString(placeholder)
 			buf.WriteValue(table)
