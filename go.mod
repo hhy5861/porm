@@ -1,4 +1,4 @@
-module github.com/phoenix/porm
+module github.com/hhy5861/porm
 
 go 1.12
 
