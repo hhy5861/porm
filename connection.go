@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/phoenix/porm/dialect"
+	"github.com/hhy5861/porm/dialect"
 	"time"
 )
 
