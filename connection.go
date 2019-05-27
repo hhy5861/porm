@@ -26,6 +26,7 @@ func Open(driver, dsn string, log EventReceiver) (*Connection, error) {
 	if log == nil {
 		log = nullReceiver
 	}
+
 	conn, err := sql.Open(driver, dsn)
 	if err != nil {
 		return nil, err

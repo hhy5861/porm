@@ -68,10 +68,12 @@ func (s *tagStore) get(t reflect.Type) []string {
 			if field.PkgPath != "" && !field.Anonymous {
 				continue
 			}
-			tag := field.Tag.Get("json")
+
+			tag := field.Tag.Get("porm")
 			if tag == "-" {
 				continue
 			}
+
 			if tag == "" {
 				tag = NameMapping(field.Name)
 			}
