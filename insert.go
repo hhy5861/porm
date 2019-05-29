@@ -55,7 +55,9 @@ func (b *InsertStmt) Build(d Dialect, buf Buffer) error {
 			buf.WriteString(", ")
 			placeholderBuf.WriteString(", ")
 		}
+
 		buf.WriteString(d.QuoteIdent(col))
+
 		placeholderBuf.WriteString(placeholder)
 	}
 
