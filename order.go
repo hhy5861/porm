@@ -15,9 +15,9 @@ func order(column string, dir direction) Builder {
 
 		switch dir {
 		case asc:
-			buf.WriteString(" ASC")
+			buf.WriteString(" ")
 		case desc:
-			buf.WriteString(" DESC")
+			buf.WriteString(" ")
 		}
 
 		return nil

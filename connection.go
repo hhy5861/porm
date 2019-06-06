@@ -20,13 +20,20 @@ type (
 		Dialect
 		EventReceiver
 	}
+
+	Config struct {
+		Host   string `yaml:"host"`
+		Port   int    `yaml:"port"`
+		Schema string `yaml:"schema"`
+	}
 )
 
-func Open(driver, dsn string, log EventReceiver) (*Connection, error) {
+func Open(driver string, cfg *Config, log EventReceiver) (*Connection, error) {
 	if log == nil {
 		log = nullReceiver
 	}
 
+	dsn := fmt.Sprintf("http://%s:%d", cfg.Host, cfg.Port)
 	conn, err := sql.Open(driver, dsn)
 	if err != nil {
 		return nil, err
@@ -36,7 +43,7 @@ func Open(driver, dsn string, log EventReceiver) (*Connection, error) {
 
 	switch driver {
 	case "avatica":
-		d = dialect.Avatica
+		d = dialect.NewAvatica(cfg.Schema)
 	default:
 		return nil, ErrNotSupported
 	}

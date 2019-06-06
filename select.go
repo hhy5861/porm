@@ -17,7 +17,6 @@ type SelectStmt struct {
 	IsDistinct bool
 
 	Column    []interface{}
-	Namespace interface{}
 	Table     interface{}
 	JoinTable []Builder
 
@@ -64,16 +63,8 @@ func (b *SelectStmt) Build(d Dialect, buf Buffer) error {
 	if b.Table != nil {
 		buf.WriteString(" FROM ")
 
-		if b.Namespace != nil {
-			switch namespace := b.Namespace.(type) {
-			case string:
-				buf.WriteString(d.QuoteIdent(namespace))
-				buf.WriteString(speck)
-			default:
-				buf.WriteString(placeholder)
-				buf.WriteValue(namespace)
-			}
-		}
+		buf.WriteString(d.QuoteIdent(d.Schema()))
+		buf.WriteString(speck)
 
 		switch table := b.Table.(type) {
 		case string:
@@ -223,11 +214,9 @@ func (tx *Tx) SelectBySql(query string, value ...interface{}) *SelectStmt {
 	return b
 }
 
-// From specifies namespace to select from.
-// table can be Builder like SelectStmt, or string.
-func (b *SelectStmt) Schema(schema interface{}) *SelectStmt {
-	b.Namespace = schema
-
+// Select creates a SelectStmt.
+func (b *SelectStmt) Select(column ...interface{}) *SelectStmt {
+	b.Column = column
 	return b
 }
 

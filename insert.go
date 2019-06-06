@@ -15,7 +15,6 @@ type InsertStmt struct {
 
 	raw
 
-	Namespace    string
 	Table        string
 	Column       []string
 	Value        [][]interface{}
@@ -40,10 +39,8 @@ func (b *InsertStmt) Build(d Dialect, buf Buffer) error {
 
 	buf.WriteString("UPSERT INTO ")
 
-	if b.Namespace != "" {
-		buf.WriteString(d.QuoteIdent(b.Namespace))
-		buf.WriteString(`.`)
-	}
+	buf.WriteString(d.QuoteIdent(d.Schema()))
+	buf.WriteString(speck)
 
 	buf.WriteString(d.QuoteIdent(b.Table))
 
@@ -144,14 +141,6 @@ func (tx *Tx) InsertBySql(query string, value ...interface{}) *InsertStmt {
 	return b
 }
 
-// From specifies namespace to select from.
-// namespace can be Builder like SelectStmt, or string.
-func (b *InsertStmt) Schema(schema string) *InsertStmt {
-	b.Namespace = schema
-
-	return b
-}
-
 func (b *InsertStmt) Columns(column ...string) *InsertStmt {
 	b.Column = column
 	return b
@@ -172,15 +161,20 @@ func (b *InsertStmt) Record(structValue interface{}) *InsertStmt {
 	v := reflect.Indirect(reflect.ValueOf(structValue))
 
 	if v.Kind() == reflect.Struct {
+		for i := 0; i < v.NumField(); i++ {
+			fieldName := v.Type().Field(i).Tag.Get("porm")
+			b.Column = append(b.Column, fieldName)
+		}
+
 		found := make([]interface{}, len(b.Column)+1)
 		// ID is recommended by golint here
 		s := newTagStore()
-		s.findValueByName(v, append(b.Column, "id"), found, false)
+		s.findValueByName(v, append(b.Column, "ID"), found, false)
 
 		value := found[:len(found)-1]
-		for i, v := range value {
-			if v != nil {
-				value[i] = v.(reflect.Value).Interface()
+		for i, m := range value {
+			if m != nil {
+				value[i] = m.(reflect.Value).Interface()
 			}
 		}
 

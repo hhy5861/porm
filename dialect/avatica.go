@@ -8,11 +8,16 @@ import (
 
 type (
 	avatica struct {
+		Schemas string
 	}
 )
 
 func (d avatica) QuoteIdent(s string) string {
 	return s
+}
+
+func (d avatica) Schema() string {
+	return d.Schemas
 }
 
 func (d avatica) EncodeString(s string) string {

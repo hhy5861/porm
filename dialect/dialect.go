@@ -11,6 +11,10 @@ const (
 	timeFormat = "2006-01-02 15:04:05.000000"
 )
 
+func NewAvatica(schema string) *avatica {
+	return &avatica{Schemas: schema}
+}
+
 func quoteIdent(s, quote string) string {
 	part := strings.SplitN(s, ".", 2)
 	if len(part) == 2 {
