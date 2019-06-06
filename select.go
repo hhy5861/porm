@@ -63,8 +63,10 @@ func (b *SelectStmt) Build(d Dialect, buf Buffer) error {
 	if b.Table != nil {
 		buf.WriteString(" FROM ")
 
-		buf.WriteString(d.QuoteIdent(d.Schema()))
-		buf.WriteString(speck)
+		if d.Schema() != "" {
+			buf.WriteString(d.QuoteIdent(d.Schema()))
+			buf.WriteString(speck)
+		}
 
 		switch table := b.Table.(type) {
 		case string:

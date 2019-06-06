@@ -37,8 +37,11 @@ func (b *UpdateStmt) Build(d Dialect, buf Buffer) error {
 	}
 
 	buf.WriteString("UPDATE ")
-	buf.WriteString(d.QuoteIdent(d.Schema()))
-	buf.WriteString(speck)
+
+	if d.Schema() != "" {
+		buf.WriteString(d.QuoteIdent(d.Schema()))
+		buf.WriteString(speck)
+	}
 
 	buf.WriteString(d.QuoteIdent(b.Table))
 	buf.WriteString(" SET ")

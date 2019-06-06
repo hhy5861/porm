@@ -39,8 +39,10 @@ func (b *InsertStmt) Build(d Dialect, buf Buffer) error {
 
 	buf.WriteString("UPSERT INTO ")
 
-	buf.WriteString(d.QuoteIdent(d.Schema()))
-	buf.WriteString(speck)
+	if d.Schema() != "" {
+		buf.WriteString(d.QuoteIdent(d.Schema()))
+		buf.WriteString(speck)
+	}
 
 	buf.WriteString(d.QuoteIdent(b.Table))
 

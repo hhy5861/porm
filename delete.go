@@ -32,8 +32,10 @@ func (b *DeleteStmt) Build(d Dialect, buf Buffer) error {
 
 	buf.WriteString("DELETE FROM ")
 
-	buf.WriteString(d.QuoteIdent(d.Schema()))
-	buf.WriteString(speck)
+	if d.Schema() !=""{
+		buf.WriteString(d.QuoteIdent(d.Schema()))
+		buf.WriteString(speck)
+	}
 
 	buf.WriteString(d.QuoteIdent(b.Table))
 
